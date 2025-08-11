@@ -1,4 +1,5 @@
-﻿using ScreenSound.Menus;
+﻿using ScreenSound.Banco;
+using ScreenSound.Menus;
 using ScreenSound.Modelos;
 
 Artista ira = new Artista("Ira!", "Banda Ira!");
@@ -53,5 +54,31 @@ void ExibirOpcoesDoMenu()
         Console.WriteLine("Opção inválida");
     }
 }
+
+try
+{
+    var artistaDAL = new ArtistaDAL();
+    Artista artista1 = new Artista("Nirvana","Nirvana é foda");
+    //artistaDAL.Adicionar(artista1);
+
+    Console.WriteLine("PRIMEIRA LISTAGEM");
+    var listaArtistas = artistaDAL.Listar();
+    foreach(var artista in listaArtistas)
+    {
+        Console.WriteLine(artista);
+    }
+
+    Console.WriteLine();
+    Console.WriteLine();
+
+    //ATUALIZAÇÃO E DELEÇÃO 
+
+
+}
+catch(Exception e)
+{
+    Console.WriteLine(e.Message);
+}
+return;
 
 ExibirOpcoesDoMenu();

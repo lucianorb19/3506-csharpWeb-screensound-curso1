@@ -32,9 +32,10 @@ internal class Artista
 
     public override string ToString()
     {
-        return $@"Id: {Id}
-            Nome: {Nome}
-            Foto de Perfil: {FotoPerfil}
-            Bio: {Bio}";
+        return $@"
+Id: {Id}
+Nome: {Nome}
+Foto de Perfil: {FotoPerfil}
+Bio: {Bio}";
     }
 }
