@@ -3,7 +3,7 @@ using ScreenSound.Modelos;
 
 namespace ScreenSound.Banco;
 
-internal class ScreenSoundContext : DbContext
+public class ScreenSoundContext : DbContext
 {
 
     //RELACIONAMENTO ENTRE MODELOS E TABELAS BD
