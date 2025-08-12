@@ -2,7 +2,7 @@
 
 namespace ScreenSound.Banco;
 
-internal class ArtistaDAL
+internal class ArtistaDAL : DAL<Artista>
 {
     //CAMPOS
     private readonly ScreenSoundContext context;
@@ -15,7 +15,7 @@ internal class ArtistaDAL
 
 
     //DEMAIS MÉTODOS
-    public IEnumerable<Artista> Listar()
+    public override IEnumerable<Artista> Listar()
     {
         
        return context.Artistas.ToList();
@@ -43,8 +43,8 @@ internal class ArtistaDAL
         //return lista;
     }
 
-    
-    public void Adicionar(Artista artista)
+
+    public override void Adicionar(Artista artista)
     {
         context.Artistas.Add(artista);
         context.SaveChanges();
@@ -65,8 +65,8 @@ internal class ArtistaDAL
         //Console.WriteLine($"Registros adicionados: {retorno}");
     }
 
-    
-    public void Atualizar(Artista artista)
+
+    public override void Atualizar(Artista artista)
     {
         context.Artistas.Update(artista);
         context.SaveChanges();
@@ -84,8 +84,8 @@ internal class ArtistaDAL
     }
 
 
-    
-    public void Deletar(Artista artista)
+
+    public override void Deletar(Artista artista)
     {
         context.Artistas.Remove(artista);
         context.SaveChanges();

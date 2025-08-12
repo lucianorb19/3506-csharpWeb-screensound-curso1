@@ -2,7 +2,7 @@
 
 namespace ScreenSound.Banco
 {
-    internal class MusicaDAL
+    internal class MusicaDAL : DAL<Musica>
     {
         //CAMPOS
         private readonly ScreenSoundContext context;
@@ -14,29 +14,34 @@ namespace ScreenSound.Banco
         }
 
         //DEMAIS MÉTODOS
-        public IEnumerable<Musica> ListarMusicas()
+        public override IEnumerable<Musica> Listar()
         {
             return context.Musicas.ToList();
         }
 
-        public void AdicionarMusica(Musica musica)
+        public override void Adicionar(Musica musica)
         {
             context.Musicas.Add(musica);
             context.SaveChanges();
         }
 
-        public void AtualizarMusica(Musica musica)
+        public override void Atualizar(Musica musica)
         {
             context.SaveChanges();
             context.Musicas.Update(musica);
         }
 
-        public void DeletarMusica(Musica musica)
+        public override void Deletar(Musica musica)
         {
             context.Musicas.Remove(musica);
             context.SaveChanges();
         }
 
+        public Musica? RecuperarPeloNome(string nome)
+        {
+            return context.Musicas
+                .FirstOrDefault(musica => musica.Nome.Equals(nome));
+        }
 
 
 
