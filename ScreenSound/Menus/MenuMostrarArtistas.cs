@@ -3,7 +3,7 @@ using ScreenSound.Modelos;
 
 namespace ScreenSound.Menus;
 
-internal class MenuMostrarArtistas : Menu
+internal class MenuMostrarArtistas : Menu<Artista>
 {
     public override void Executar(DAL<Artista> artistaDAL)
     {
@@ -13,7 +13,7 @@ internal class MenuMostrarArtistas : Menu
         foreach (var artista in artistaDAL.Listar())
         {
             Console.WriteLine();
-            Console.WriteLine($"Artista: {artista}");
+            Console.WriteLine($"{artista}");
         }
 
         Console.WriteLine("\nDigite uma tecla para voltar ao menu principal");

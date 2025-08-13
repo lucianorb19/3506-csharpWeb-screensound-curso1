@@ -19,7 +19,9 @@ public class Musica
     //DEMAIS MÉTODOS
     public void ExibirFichaTecnica()
     {
-        Console.WriteLine($"Nome: {Nome}");
+        Console.WriteLine($"Nome: {Nome}\n" +
+                          $"Ano: {AnoLancamento}\n" +
+                          $"Artista/Banda: {Artista.Nome}\n");
       
     }
 

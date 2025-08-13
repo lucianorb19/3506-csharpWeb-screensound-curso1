@@ -3,7 +3,7 @@ using ScreenSound.Modelos;
 
 namespace ScreenSound.Menus;
 
-internal class MenuRegistrarArtista : Menu
+internal class MenuRegistrarArtista : Menu<Artista>
 {
     public override void Executar(DAL<Artista> artistaDAL)
     {
@@ -15,8 +15,9 @@ internal class MenuRegistrarArtista : Menu
         string bioDoArtista = Console.ReadLine()!;
         Artista artista = new Artista(nomeDoArtista, bioDoArtista);
         artistaDAL.Adicionar(artista);
-        Console.WriteLine($"O artista {nomeDoArtista} foi registrado com sucesso!");
-        Thread.Sleep(4000);
+        Console.WriteLine($"\nO artista {nomeDoArtista} foi registrado com sucesso!");
+        Console.WriteLine("Digite uma tecla para voltar ao menu principal");
+        Console.ReadKey();
         Console.Clear();
     }
 }

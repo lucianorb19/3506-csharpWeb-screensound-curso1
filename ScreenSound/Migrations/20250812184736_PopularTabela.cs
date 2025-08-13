@@ -38,8 +38,6 @@ namespace ScreenSound.Migrations
                 new string[] { "Nome", "Bio", "FotoPerfil" }, 
                 new object[] { "Roque Abílio", "Recriando músicas famosas com uma reviravolta rockabilly, a Roque Abílio cativa o público com uma explosão autêntica do passado que ainda faz todo mundo dançar no presente.", "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png" });
 
-
-
         }
 
         /// <inheritdoc />

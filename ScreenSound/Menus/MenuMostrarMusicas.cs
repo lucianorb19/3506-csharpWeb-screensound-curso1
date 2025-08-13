@@ -3,7 +3,7 @@ using ScreenSound.Modelos;
 
 namespace ScreenSound.Menus;
 
-internal class MenuMostrarMusicas : Menu
+internal class MenuMostrarMusicas : Menu<Artista>
 {
     public override void Executar(DAL<Artista> artistaDAL)
     {
@@ -11,7 +11,7 @@ internal class MenuMostrarMusicas : Menu
         ExibirTituloDaOpcao("Exibir detalhes do artista");
         Console.Write("Digite o nome do artista que deseja conhecer melhor: ");
         string nomeDoArtista = Console.ReadLine()!;
-        var artistaRecuperado = artistaDAL.RecuperarPor(
+        var artistaRecuperado = artistaDAL.RecuperarPrimeiroPor(
             artista => artista.Nome.Equals(nomeDoArtista));
 
         if (artistaRecuperado is not null)
