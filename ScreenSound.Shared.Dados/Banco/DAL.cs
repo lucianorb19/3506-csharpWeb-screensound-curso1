@@ -34,7 +34,8 @@ public class DAL<T> where T : class
 
     public T? RecuperarPrimeiroPor(Func<T, bool> condicao)
     {
-        return context.Set<T>().FirstOrDefault(condicao);
+        return context.Set<T>()
+            .FirstOrDefault(condicao);
     }
 
     public IEnumerable<T>? RecuperarMuitosPor(Func<T, bool> condicao)

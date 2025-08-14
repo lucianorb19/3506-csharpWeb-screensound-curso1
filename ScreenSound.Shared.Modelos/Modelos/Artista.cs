@@ -10,7 +10,8 @@ public class Artista
     public int Id { get; set; }
 
 
-    //CONSTRUTOR
+    //CONSTRUTORES
+    public Artista() { }
     public Artista(string nome, string bio)
     {
         Nome = nome;
