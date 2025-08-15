@@ -1,13 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using ScreenSound.Banco;
 using ScreenSound.Modelos;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//INJEÇÃO DE DEPENDÊNCIA - DAL<Artista> E ScreenSoundContext
+//INJEÇÃO DE DEPENDÊNCIA - DAL<Artista>, DAL<Musica> E ScreenSoundContext
 builder.Services.AddDbContext<ScreenSoundContext>();
 builder.Services.AddTransient<DAL<Artista>>();
+builder.Services.AddTransient<DAL<Musica>>();
 
 //IGNORAR CICLOS NA SERIALIZAÇÃO
 builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>
@@ -17,27 +19,27 @@ builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>
 var app = builder.Build();
 
 
-
+//CRUD ARTISTAS
 app.MapGet("/Artistas", ([FromServices] DAL<Artista> dal) =>
 {
     return Results.Ok(dal.Listar());
 });
 
-//LISTA TODOS ARTISTAS COM NOME ESPECÍFICO
+
 app.MapGet("/Artistas/{nome}", ([FromServices] DAL < Artista > dal, 
                                 string nome) =>
 {
-    var artista =  dal.RecuperarMuitosPor(
+    var artistas =  dal.RecuperarMuitosPor(
         a => a.Nome.ToUpper().Equals(nome.ToUpper()));
-    if(artista is null)
+    if(artistas.IsNullOrEmpty())
     {
         return Results.NotFound();
     }
-    return Results.Ok(artista);
+    return Results.Ok(artistas);
 });
 
-//ADICIONA UM ARTISTA RECEBIDO NO CORPO DA REQUISIÇÃO
-app.MapPost("/Artistas",([FromServices] DAL < Artista > dal,
+
+app.MapPost("/Artistas",([FromServices] DAL<Artista> dal,
                          [FromBody]Artista artista) =>
 {
     dal.Adicionar(artista);
@@ -48,12 +50,12 @@ app.MapPost("/Artistas",([FromServices] DAL < Artista > dal,
 app.MapDelete("/Artistas/{id}", ([FromServices] DAL<Artista> dal,
                                  int id) =>
 {
-    var artista = dal.RecuperarPrimeiroPor(a => a.Id.Equals(id));
-    if (artista is null)
+    var artistaDeletado = dal.RecuperarPrimeiroPor(a => a.Id.Equals(id));
+    if (artistaDeletado is null)
     {
         return Results.NotFound();
     }
-    dal.Deletar(artista);
+    dal.Deletar(artistaDeletado);
     return Results.NoContent();
 });
 
@@ -78,8 +80,67 @@ app.MapPut("/Artistas", ([FromServices] DAL<Artista> dal,
     /*
      artista [FromBody] -> artistaAtualizado <-> artista no BD
      */
-
-
 });
+
+
+//CRUD MUSICAS
+app.MapGet("/Musicas", ([FromServices] DAL<Musica> dal) =>
+{
+    return Results.Ok(dal.Listar());
+});
+
+app.MapGet("/Musicas/{nome}", ([FromServices] DAL<Musica> dal,
+                               string nome) =>
+{
+    var musicas = dal.RecuperarMuitosPor(
+        m => m.Nome.ToUpper().Equals(nome.ToUpper()));
+    if(musicas.IsNullOrEmpty())
+    {
+        return Results.NotFound();
+    }
+    return Results.Ok(musicas);
+});
+
+app.MapPost("/Musicas", ([FromServices] DAL<Musica> dal,
+                         [FromBody] Musica musica) =>
+{
+    dal.Adicionar(musica);
+    return Results.Ok();
+});
+
+
+app.MapDelete("/Musicas/{id}", ([FromServices] DAL<Musica> dal,
+                                int id) =>
+{
+    var musicaDeletada = dal.RecuperarPrimeiroPor(
+        m => m.Id.Equals(id));
+
+    if(musicaDeletada is null)
+    {
+        return Results.NotFound();
+    }
+
+    dal.Deletar(musicaDeletada);
+    return Results.NoContent();
+});
+
+
+app.MapPut("/Musicas", ([FromServices] DAL<Musica> dal,
+                        [FromBody] Musica musica) =>
+{
+    var musicaAtualizada = dal.RecuperarPrimeiroPor(
+        m => m.Id.Equals(musica.Id));
+
+    if (musicaAtualizada is null)
+    {
+        return Results.NotFound();
+    }
+    musicaAtualizada.Nome = musica.Nome;
+    musicaAtualizada.AnoLancamento = musica.AnoLancamento;
+    dal.Atualizar(musicaAtualizada);
+
+    return Results.Ok();
+});
+
 
 app.Run();
