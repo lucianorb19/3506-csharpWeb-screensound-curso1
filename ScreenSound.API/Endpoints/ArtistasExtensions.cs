@@ -1,0 +1,77 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using ScreenSound.Banco;
+using ScreenSound.Modelos;
+
+namespace ScreenSound.API.Endpoints
+{
+    public static class ArtistasExtensions
+    {
+        public static void AddEndPointsArtistas(this WebApplication app)
+        {
+
+            app.MapGet("/Artistas", ([FromServices] DAL<Artista> dal) =>
+            {
+                return Results.Ok(dal.Listar());
+            });
+
+
+            app.MapGet("/Artistas/{nome}", ([FromServices] DAL<Artista> dal,
+                                            string nome) =>
+            {
+                var artistas = dal.RecuperarMuitosPor(
+                    a => a.Nome.ToUpper().Equals(nome.ToUpper()));
+                if (artistas.IsNullOrEmpty())
+                {
+                    return Results.NotFound();
+                }
+                return Results.Ok(artistas);
+            });
+
+
+            app.MapPost("/Artistas", ([FromServices] DAL<Artista> dal,
+                                     [FromBody] Artista artista) =>
+            {
+                dal.Adicionar(artista);
+                return Results.Ok();
+            });
+
+
+            app.MapDelete("/Artistas/{id}", ([FromServices] DAL<Artista> dal,
+                                             int id) =>
+            {
+                var artistaDeletado = dal.RecuperarPrimeiroPor(a => a.Id.Equals(id));
+                if (artistaDeletado is null)
+                {
+                    return Results.NotFound();
+                }
+                dal.Deletar(artistaDeletado);
+                return Results.NoContent();
+            });
+
+
+            app.MapPut("/Artistas", ([FromServices] DAL<Artista> dal,
+                                     [FromBody] Artista artista) =>
+            {
+                var artistaAtualizado = dal.RecuperarPrimeiroPor(
+                    a => a.Id.Equals(artista.Id));
+
+                if (artistaAtualizado is null)
+                {
+                    return Results.NotFound();
+                }
+                artistaAtualizado.Nome = artista.Nome;
+                artistaAtualizado.Bio = artista.Bio;
+                artistaAtualizado.FotoPerfil = artista.FotoPerfil;
+                dal.Atualizar(artistaAtualizado);
+
+                return Results.Ok();
+
+                /*
+                 artista [FromBody] -> artistaAtualizado <-> artista no BD
+                 */
+            });
+
+        }
+    }
+}
