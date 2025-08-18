@@ -33,7 +33,10 @@ namespace ScreenSound.API.Endpoints
                                      [FromBody] MusicaRequest musicaRequest) =>
             {
                 var musica = new Musica(musicaRequest.nome,
-                                        musicaRequest.anoLancamento);
+                                        musicaRequest.anoLancamento)
+                {
+                    ArtistaId = musicaRequest.artistaId
+                };
                 dal.Adicionar(musica);
                 return Results.Ok();
             });
@@ -75,7 +78,7 @@ namespace ScreenSound.API.Endpoints
 
         private static MusicaResponse EntityToResponse(Musica musica)
         {
-            return new MusicaResponse(musica.Id, musica.Nome, musica.AnoLancamento);
+            return new MusicaResponse(musica.Id, musica.Nome, musica.ArtistaId, musica.AnoLancamento);
         }
 
         private static ICollection<MusicaResponse> 

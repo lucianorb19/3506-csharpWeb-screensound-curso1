@@ -76,6 +76,7 @@ namespace ScreenSound.API.Endpoints
             });
         }
 
+        //MÉTODOS PARA O RESPONSE - ENDPOINTS DE CONSULTA
         private static ArtistaResponse EntityToResponse(Artista artista)
         {
             return new ArtistaResponse(artista.Id, artista.Nome, 
