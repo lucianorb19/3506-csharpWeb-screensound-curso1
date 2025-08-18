@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using ScreenSound.API.Requests;
+using ScreenSound.API.Responses;
 using ScreenSound.Banco;
 using ScreenSound.Modelos;
 
@@ -13,7 +14,7 @@ namespace ScreenSound.API.Endpoints
 
             app.MapGet("/Musicas", ([FromServices] DAL<Musica> dal) =>
             {
-                return Results.Ok(dal.Listar());
+                return Results.Ok(EntityListToResponseList(dal.Listar()));
             });
 
             app.MapGet("/Musicas/{nome}", ([FromServices] DAL<Musica> dal,
@@ -25,7 +26,7 @@ namespace ScreenSound.API.Endpoints
                 {
                     return Results.NotFound();
                 }
-                return Results.Ok(musicas);
+                return Results.Ok(EntityListToResponseList(musicas));
             });
 
             app.MapPost("/Musicas", ([FromServices] DAL<Musica> dal,
@@ -70,7 +71,20 @@ namespace ScreenSound.API.Endpoints
 
                 return Results.Ok();
             });
-
         }
+
+        private static MusicaResponse EntityToResponse(Musica musica)
+        {
+            return new MusicaResponse(musica.Id, musica.Nome, musica.AnoLancamento);
+        }
+
+        private static ICollection<MusicaResponse> 
+                              EntityListToResponseList(IEnumerable<Musica> musicaList)
+        {
+            return musicaList.Select(a => EntityToResponse(a)).ToList();
+        }
+
+        
+
     }
 }
