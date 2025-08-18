@@ -11,7 +11,7 @@ public class Artista
 
 
     //CONSTRUTORES
-    public Artista() { }
+    //public Artista() { }
     public Artista(string nome, string bio)
     {
         Nome = nome;
