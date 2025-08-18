@@ -1,3 +1,4 @@
+using Microsoft.OpenApi.Models;
 using ScreenSound.API.Endpoints;
 using ScreenSound.Banco;
 using ScreenSound.Modelos;
@@ -13,20 +14,23 @@ builder.Services.AddTransient<DAL<Musica>>();
 
 //SWAGGER
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
+builder.Services.AddSwaggerGen(options =>
 {
-    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
     {
         Title = "ScreenSound API",
         Version = "v1",
         Description = "Uma API para gerenciamento de artistas e músicas",
-        Contact = new Microsoft.OpenApi.Models.OpenApiContact
-        {
-            Name = "ScreenSound Support",
-            Email = "support@screensound.com",
-            Url = new Uri("https://screensound.com/support")
-        }
     });
+    /*
+     options.SwaggerDoc("v1", new OpenApiInfo
+        {
+            Version = "v1",
+            Title = "ScreenSound API",
+            Description = "Uma API para gerenciamento de artistas e músicas",
+        }); 
+    */
+
 });
 
 //IGNORAR CICLOS NA SERIALIZAÇÃO
@@ -45,3 +49,5 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.Run();
+
+
