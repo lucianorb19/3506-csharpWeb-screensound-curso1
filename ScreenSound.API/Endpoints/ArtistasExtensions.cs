@@ -53,24 +53,23 @@ namespace ScreenSound.API.Endpoints
 
 
             app.MapPut("/Artistas", ([FromServices] DAL<Artista> dal,
-                                     [FromBody] Artista artista) =>
+                                     [FromBody] ArtistaRequestEdit artistaRequestEdit) =>
             {
                 var artistaAtualizado = dal.RecuperarPrimeiroPor(
-                    a => a.Id.Equals(artista.Id));
+                    a => a.Id.Equals(artistaRequestEdit.id));
 
                 if (artistaAtualizado is null)
                 {
                     return Results.NotFound();
                 }
-                artistaAtualizado.Nome = artista.Nome;
-                artistaAtualizado.Bio = artista.Bio;
-                artistaAtualizado.FotoPerfil = artista.FotoPerfil;
+                artistaAtualizado.Nome = artistaRequestEdit.nome;
+                artistaAtualizado.Bio = artistaRequestEdit.bio;
                 dal.Atualizar(artistaAtualizado);
 
                 return Results.Ok();
 
                 /*
-                 artista [FromBody] -> artistaAtualizado <-> artista no BD
+                 artistaRequestEdit [FromBody] -> artistaAtualizado <-> artista no BD
                  */
             });
 

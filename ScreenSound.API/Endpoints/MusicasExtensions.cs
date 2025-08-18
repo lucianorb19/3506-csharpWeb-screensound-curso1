@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using ScreenSound.API.Requests;
 using ScreenSound.Banco;
 using ScreenSound.Modelos;
 
@@ -28,8 +29,10 @@ namespace ScreenSound.API.Endpoints
             });
 
             app.MapPost("/Musicas", ([FromServices] DAL<Musica> dal,
-                                     [FromBody] Musica musica) =>
+                                     [FromBody] MusicaRequest musicaRequest) =>
             {
+                var musica = new Musica(musicaRequest.nome,
+                                        musicaRequest.anoLancamento);
                 dal.Adicionar(musica);
                 return Results.Ok();
             });
@@ -52,17 +55,17 @@ namespace ScreenSound.API.Endpoints
 
 
             app.MapPut("/Musicas", ([FromServices] DAL<Musica> dal,
-                                    [FromBody] Musica musica) =>
+                                    [FromBody] MusicaRequestEdit musicaRequestEdit) =>
             {
                 var musicaAtualizada = dal.RecuperarPrimeiroPor(
-                    m => m.Id.Equals(musica.Id));
+                    m => m.Id.Equals(musicaRequestEdit.id));
 
                 if (musicaAtualizada is null)
                 {
                     return Results.NotFound();
                 }
-                musicaAtualizada.Nome = musica.Nome;
-                musicaAtualizada.AnoLancamento = musica.AnoLancamento;
+                musicaAtualizada.Nome = musicaRequestEdit.nome;
+                musicaAtualizada.AnoLancamento = musicaRequestEdit.anoLancamento;
                 dal.Atualizar(musicaAtualizada);
 
                 return Results.Ok();

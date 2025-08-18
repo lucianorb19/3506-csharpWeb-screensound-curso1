@@ -10,9 +10,10 @@ public class Musica
 
 
     //CONSTRUTOR
-    public Musica(string nome)
+    public Musica(string nome, int? anoLancamento)
     {
         Nome = nome;
+        AnoLancamento = anoLancamento;
     }
 
 
