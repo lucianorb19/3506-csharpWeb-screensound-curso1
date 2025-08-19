@@ -4,6 +4,7 @@ using ScreenSound.API.Requests;
 using ScreenSound.API.Responses;
 using ScreenSound.Banco;
 using ScreenSound.Modelos;
+using ScreenSound.Shared.Modelos.Modelos;
 
 namespace ScreenSound.API.Endpoints
 {
@@ -29,13 +30,22 @@ namespace ScreenSound.API.Endpoints
                 return Results.Ok(EntityListToResponseList(musicas));
             });
 
+
             app.MapPost("/Musicas", ([FromServices] DAL<Musica> dal,
                                      [FromBody] MusicaRequest musicaRequest) =>
             {
                 var musica = new Musica(musicaRequest.nome,
                                         musicaRequest.anoLancamento)
                 {
-                    ArtistaId = musicaRequest.artistaId
+                    ArtistaId = musicaRequest.artistaId,
+                    //CONVERSÃO ICollection<GeneroRequest> PARA
+                    //ICollection<Genero>
+                    //COM USO DE OPERADOR TERNÁRIO PARA CASO generos LISTADOS
+                    //EM musicaRequest SEJA VAZIO
+                    Generos =
+                    musicaRequest.generos is not null ?
+                        GeneroRequestConverter(musicaRequest.generos) :
+                        new List<Genero>()
                 };
                 dal.Adicionar(musica);
                 return Results.Ok();
@@ -74,6 +84,23 @@ namespace ScreenSound.API.Endpoints
 
                 return Results.Ok();
             });
+        }
+
+
+        //MÉTODOS AUXILIARES
+        private static ICollection<Genero> GeneroRequestConverter(
+                                ICollection<GeneroRequest> generos)
+        {
+            return generos.Select(a => RequestToEntity(a)).ToList();
+        }
+
+        private static Genero RequestToEntity(GeneroRequest generoRequest)
+        {
+            return new Genero()
+            {
+                Nome = generoRequest.Nome,
+                Descricao = generoRequest.Descricao
+            };
         }
 
         private static MusicaResponse EntityToResponse(Musica musica)
