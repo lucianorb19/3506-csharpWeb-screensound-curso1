@@ -32,6 +32,7 @@ namespace ScreenSound.API.Endpoints
 
 
             app.MapPost("/Musicas", ([FromServices] DAL<Musica> dal,
+                                     [FromServices] DAL<Genero> dalGenero,
                                      [FromBody] MusicaRequest musicaRequest) =>
             {
                 var musica = new Musica(musicaRequest.nome,
@@ -44,7 +45,7 @@ namespace ScreenSound.API.Endpoints
                     //EM musicaRequest SEJA VAZIO
                     Generos =
                     musicaRequest.generos is not null ?
-                        GeneroRequestConverter(musicaRequest.generos) :
+                        GeneroRequestConverter(musicaRequest.generos, dalGenero) :
                         new List<Genero>()
                 };
                 dal.Adicionar(musica);
@@ -89,17 +90,43 @@ namespace ScreenSound.API.Endpoints
 
         //MÉTODOS AUXILIARES
         private static ICollection<Genero> GeneroRequestConverter(
-                                ICollection<GeneroRequest> generos)
+                                ICollection<GeneroRequest> listaGenerosRequest, DAL<Genero> dalGenero)
         {
-            return generos.Select(a => RequestToEntity(a)).ToList();
+            //return generos.Select(a => RequestToEntity(a)).ToList();
+            var listaDeGeneros = new List<Genero>();
+            foreach (var item in listaGenerosRequest)
+            {
+                //CADA GeneroRequest É CONVERTIDO NUM OBJETO Genero
+                var entity = RequestToEntity(item);
+                
+                //O ITEM ATUAL DO LOOP É SALVO EM genero 
+                //CASO SEU NOME JÁ ESTEJA NA BASE DE DADOS
+                var genero = dalGenero.RecuperarPrimeiroPor(
+                    g=> g.Nome.ToUpper().Equals(item.nome.ToUpper()));
+
+                if(genero is not null)
+                {
+                    listaDeGeneros.Add(genero);//?????
+                }
+                else
+                {
+                    listaDeGeneros.Add(entity);
+                }
+
+                //OU SEJA, PARA A MÚSICA QUE ESTÁ SENDO CADASTRADA
+                //SE NO CAMPO GENERO EU TENTAR INSERIR UM NOME QUE JÁ TENHA NO BANCO
+                //ADICIONO EM listaDeGeneros
+                //SE NÃO HOUVER NO BANCO
+                //ADICIONO DA MESMA FORMA ????
+            }
+            return listaDeGeneros;
         }
 
         private static Genero RequestToEntity(GeneroRequest generoRequest)
         {
-            return new Genero()
+            return new Genero(generoRequest.nome)
             {
-                Nome = generoRequest.Nome,
-                Descricao = generoRequest.Descricao
+                Descricao = generoRequest.descricao
             };
         }
 

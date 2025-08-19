@@ -11,10 +11,17 @@ namespace ScreenSound.Shared.Modelos.Modelos
     {
         //PROPRIEDADES
         public int Id { get; set; }
-        public string? Nome { get; set; } = string.Empty;
+        public string Nome { get; set; } = string.Empty;
         public string? Descricao { get; set; } = string.Empty;
         public virtual ICollection<Musica> Musicas { get; set; }
 
+        //CONSTRUTOR
+        public Genero(string nome)
+        {
+            Nome = nome;
+        }
+
+        //DEMAIS MÉTODOS
         public override string ToString()
         {
             return $"Nome: {Nome}\n" +
