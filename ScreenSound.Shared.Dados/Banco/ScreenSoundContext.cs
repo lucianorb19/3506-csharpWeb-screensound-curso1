@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ScreenSound.Modelos;
+using ScreenSound.Shared.Modelos.Modelos;
 
 namespace ScreenSound.Banco;
 
@@ -11,6 +12,7 @@ public class ScreenSoundContext : DbContext
     //Artistas  - TABELA BD
     public DbSet<Artista> Artistas { get; set; }
     public DbSet<Musica> Musicas { get; set; }
+    public DbSet<Genero> Generos { get; set; }
 
     private string connectionString = "Data Source=(localdb)\\" +
         "MSSQLLocalDB;Initial Catalog=ScreenSoundV0;" +
@@ -23,6 +25,14 @@ public class ScreenSoundContext : DbContext
         optionsBuilder
             .UseSqlServer(connectionString)
             .UseLazyLoadingProxies();
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        //RELACIONAMENTO N:N ENTRE MUSICAS E GENEROS
+        modelBuilder.Entity<Musica>()
+            .HasMany(c => c.Generos)
+            .WithMany(c => c.Musicas);
     }
 
 }
