@@ -25,7 +25,7 @@ namespace ScreenSound.API.Endpoints
                     m => m.Nome.ToUpper().Equals(nome.ToUpper()));
                 if (musicas.IsNullOrEmpty())
                 {
-                    return Results.NotFound();
+                    return Results.NotFound("Música não encontrada!");
                 }
                 return Results.Ok(EntityListToResponseList(musicas));
             });
@@ -61,7 +61,7 @@ namespace ScreenSound.API.Endpoints
 
                 if (musicaDeletada is null)
                 {
-                    return Results.NotFound();
+                    return Results.NotFound("Música não encontrada!");
                 }
 
                 dal.Deletar(musicaDeletada);
@@ -77,7 +77,7 @@ namespace ScreenSound.API.Endpoints
 
                 if (musicaAtualizada is null)
                 {
-                    return Results.NotFound();
+                    return Results.NotFound("Música não encontrada!");
                 }
                 musicaAtualizada.Nome = musicaRequestEdit.nome;
                 musicaAtualizada.AnoLancamento = musicaRequestEdit.anoLancamento;

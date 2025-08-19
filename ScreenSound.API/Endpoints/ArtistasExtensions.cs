@@ -14,7 +14,6 @@ namespace ScreenSound.API.Endpoints
 
             app.MapGet("/Artistas", ([FromServices] DAL<Artista> dal) =>
             {
-                //return Results.Ok(dal.Listar());
                 return Results.Ok(EntityListToResponseList(dal.Listar()));
             });
 
@@ -26,7 +25,7 @@ namespace ScreenSound.API.Endpoints
                     a => a.Nome.ToUpper().Equals(nome.ToUpper()));
                 if (artistas.IsNullOrEmpty())
                 {
-                    return Results.NotFound();
+                    return Results.NotFound("Artista/Banda não encontrado!");
                 }
                 return Results.Ok(EntityListToResponseList(artistas));
             });
@@ -47,7 +46,7 @@ namespace ScreenSound.API.Endpoints
                 var artistaDeletado = dal.RecuperarPrimeiroPor(a => a.Id.Equals(id));
                 if (artistaDeletado is null)
                 {
-                    return Results.NotFound();
+                    return Results.NotFound("Artista/Banda não encontrado!");
                 }
                 dal.Deletar(artistaDeletado);
                 return Results.NoContent();
@@ -62,7 +61,7 @@ namespace ScreenSound.API.Endpoints
 
                 if (artistaAtualizado is null)
                 {
-                    return Results.NotFound();
+                    return Results.NotFound("Artista/Banda não encontrado!");
                 }
                 artistaAtualizado.Nome = artistaRequestEdit.nome;
                 artistaAtualizado.Bio = artistaRequestEdit.bio;
